@@ -177,9 +177,11 @@ cython_debug/
 
 #Ros
 
-devel/
-logs/
 build/
+devel/
+install/
+log/
+logs/
 bin/
 lib/
 msg_gen/
