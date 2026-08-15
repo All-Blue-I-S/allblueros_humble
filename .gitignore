@@ -177,10 +177,11 @@ cython_debug/
 
 #Ros
 
+
 build/
-devel/
 install/
 log/
+devel/
 logs/
 bin/
 lib/
