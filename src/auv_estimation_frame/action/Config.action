@@ -1,0 +1,15 @@
+# Goal
+sensor_msgs/Image image
+int32[] hsv
+int32[] classes
+string camera
+string filter
+
+---
+# Result
+Corner[] corners
+int32[] classes
+
+---
+# Feedback
+string status
