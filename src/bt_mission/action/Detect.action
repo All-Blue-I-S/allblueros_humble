@@ -1,0 +1,10 @@
+# Goal
+string item_group
+string item
+string camera
+---
+# Result
+bool success
+---
+# Feedback
+string status

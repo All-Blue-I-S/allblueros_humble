@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="3"
+      main_tree_to_execute="main">
+  <BehaviorTree ID="BackToStart">
+    <Sequence>
+      <Go_to x="-1000"
+             y="-1000"
+             z="0.5"
+             frame="world_frame"/>
+      <Go_to x="{start_x}"
+             y="{start_y}"
+             z="0.2"
+             frame="world_frame"/>
+      <Emerge/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="LookImage">
+    <Sequence>
+      <Go_to x="-1000"
+             y="-1000"
+             z="0.2"
+             frame="world_frame"/>
+      <IfThenElse>
+        <FirstItem counter="{counter}"/>
+        <Sequence>
+          <SubTree ID="search"
+                   item_group="{image}"
+                   task_item="picture1"
+                   __shared_blackboard="false"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+        </Sequence>
+        <Sequence>
+          <SubTree ID="search"
+                   item_group="{image}"
+                   task_item="picture2"
+                   __shared_blackboard="false"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+        </Sequence>
+      </IfThenElse>
+      <Go_to x="0"
+             y="0"
+             z="-1"
+             frame="body_frame"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="Path">
+    <Sequence>
+      <Align item_group="path"
+             item="path"
+             config="next_task"
+             camera="botton"
+             tool="COLOR"/>
+      <RetryUntilSuccessful num_attempts="5">
+        <Fallback>
+          <Detect item_group="tasks"
+                  item="{task}"
+                  camera="{cam}"/>
+          <Go_to x="1"
+                 y="0"
+                 z="0"
+                 frame="body_frame"/>
+        </Fallback>
+      </RetryUntilSuccessful>
+      <Align item_group="tasks"
+             item="{task}"
+             config="task_start"
+             camera="{cam}"
+             tool="YOLO"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="Ping">
+    <Sequence>
+      <RetryUntilSuccessful num_attempts="5">
+        <Fallback>
+          <Detect item_group="tasks"
+                  item="{task}"
+                  camera="front"/>
+          <Go_to x="1"
+                 y="0"
+                 z="0"
+                 frame="body_frame"/>
+        </Fallback>
+      </RetryUntilSuccessful>
+      <Align item_group="tasks"
+             item="{task}"
+             config="task_start"
+             camera="front"
+             tool="YOLO"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="T1">
+    <Sequence name="Missão">
+      <SubTree ID="search"
+               item_group="red_pipe"
+               task_item="defaut"/>
+      <SavePose x="{start_x}"
+                y="{start_y}"
+                z="{start_z}"/>
+      <Align item_group="red_pipe"
+             item="defaut"
+             config="gate_left"
+             camera="front"
+             tool="YOLO"/>
+      <Repeat name="manobra"
+              num_cycles="2">
+        <Rotate axis="roll"
+                angle="180"/>
+      </Repeat>
+      <Align item_group="red_pipe"
+             item="defaut"
+             config="gate_left"
+             camera="front"
+             tool="YOLO"/>
+      <ColectData image_grup="{image_data}"
+                  side="{side_data}"
+                  other_image="{other_image}"/>
+      <Go_to x="2"
+             y="0"
+             z="0"
+             frame="body_frame"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="T2">
+    <Sequence>
+      <SubTree ID="search"
+               item_group="red_pipe"
+               task_item="defaut"/>
+      <Sequence>
+        <Align item_group="red_pipe"
+               item="defaut"
+               config="{side_data}"
+               camera="front"
+               tool="YOLO"/>
+        <Go_to x="2"
+               y="0"
+               z="0"
+               frame="body_frame"/>
+        <Rotate axis="yaw"
+                angle="30"/>
+      </Sequence>
+      <Sequence>
+        <Align item_group="red_pipe"
+               item="defaut"
+               config="{side_data}"
+               camera="front"
+               tool="YOLO"/>
+        <Go_to x="2"
+               y="0"
+               z="0"
+               frame="body_frame"/>
+        <Rotate axis="yaw"
+                angle="-30"/>
+      </Sequence>
+      <Sequence>
+        <Align item_group="red_pipe"
+               item="defaut"
+               config="{side_data}"
+               camera="front"
+               tool="YOLO"/>
+        <Go_to x="2"
+               y="0"
+               z="0"
+               frame="body_frame"/>
+        <Rotate axis="yaw"
+                angle="30"/>
+      </Sequence>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="T3">
+    <Sequence>
+      <Sequence name="DroppingMarkers">
+        <Go_to x="0"
+               y="0"
+               z="0.5"
+               frame="body_frame"/>
+        <Align item_group="{image_data}"
+               item="task3"
+               config="drop_mark1"
+               camera="bottom"
+               tool="YOLO"/>
+        <DropMarkers dropper="1"/>
+      </Sequence>
+      <Sequence name="DroppingMarkers">
+        <Go_to x="0"
+               y="0"
+               z="0.5"
+               frame="body_frame"/>
+        <Align item_group="{image_data}"
+               item="task3"
+               config="drop_mark2"
+               camera="bottom"
+               tool="YOLO"/>
+        <DropMarkers dropper="2"/>
+      </Sequence>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="T4">
+    <Sequence>
+      <SubTree ID="search"
+               item_group="board"
+               task_item="defaut"/>
+      <Align item_group="board"
+             item="defaut"
+             config="aiming"
+             camera="front"
+             tool="YOLO"/>
+      <Align item_group="{image_data}"
+             item="Bigger"
+             config="aiming1"
+             camera="front"
+             tool="YOLO"/>
+      <fire torpedo="1"/>
+      <Align item_group="{image_data}"
+             item="Smaller"
+             config="aiming2"
+             camera="front"
+             tool="YOLO"/>
+      <fire torpedo="2"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="T5">
+    <Sequence>
+      <SetBlackboard value="0"
+                     output_key="{counter}"/>
+      <RetryUntilSuccessful num_attempts="10">
+        <Fallback>
+          <Sequence name="checkEmptyTable">
+            <Go_to x="-1000"
+                   y="-1000"
+                   z="0.5"
+                   frame="world_frame"/>
+            <Align item_group="table"
+                   item="defaut"
+                   config="defaut"
+                   camera="bottom"
+                   tool="YOLO"/>
+            <Go_to x="0"
+                   y="0"
+                   z="-0.5"
+                   frame="body_frame"/>
+            <CheckEmptyTable/>
+          </Sequence>
+          <ForceFailure>
+            <Fallback>
+              <SubTree ID="throwAway"
+                       Image="{image_data}"
+                       counter="{counter}"/>
+            </Fallback>
+          </ForceFailure>
+        </Fallback>
+      </RetryUntilSuccessful>
+      <Sequence>
+        <Go_to x="-1000"
+               y="-1000"
+               z="1"
+               frame="world_frame"/>
+        <Repeat num_cycles="{counter}">
+          <Repeat num_cycles="4">
+            <Rotate axis="yaw"
+                    angle="90"/>
+          </Repeat>
+        </Repeat>
+      </Sequence>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="main">
+    <Sequence>
+      <SubTree ID="T1"
+               __shared_blackboard="true"/>
+      <SubTree ID="Path"
+               task="task2"
+               cam="front"
+               __shared_blackboard="true"/>
+      <SubTree ID="T2"
+               __shared_blackboard="true"/>
+      <SubTree ID="Path"
+               task="task3"
+               cam="bottom"
+               __shared_blackboard="true"/>
+      <SubTree ID="T3"
+               __shared_blackboard="true"/>
+      <SubTree ID="Ping"
+               ping="Strong"
+               task="task4"
+               __shared_blackboard="true"/>
+      <SubTree ID="T4"
+               __shared_blackboard="true"/>
+      <SubTree ID="Ping"
+               ping="Weak"
+               task="task5"
+               __shared_blackboard="true"/>
+      <SubTree ID="T5"
+               __shared_blackboard="true"/>
+      <SubTree ID="BackToStart"
+               __shared_blackboard="true"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="search">
+    <RetryUntilSuccessful num_attempts="36">
+      <Fallback name="FindBoard">
+        <Detect item_group="{item_group}"
+                item="{task_item}"
+                camera="front"/>
+        <Rotate axis="yaw"
+                angle="10"/>
+      </Fallback>
+    </RetryUntilSuccessful>
+  </BehaviorTree>
+
+  <BehaviorTree ID="throwAway">
+    <Sequence>
+      <Sequence name="grabBottle">
+        <Detect item_group="{Image}"
+                item="object"
+                camera="bottom"/>
+        <Align item_group="{Image}"
+               item="object"
+               config="grab"
+               camera="bottom"
+               tool="YOLO"/>
+        <Claw active="True"/>
+        <Emerge/>
+      </Sequence>
+      <SubTree ID="LookImage"
+               Image="{Image}"
+               counter="{counter}"/>
+      <Sequence name="bottle_to_trash">
+        <Go_to x="0"
+               y="0"
+               z="0.5"
+               frame="body_frame"/>
+        <Align item_group="table"
+               item="defaut"
+               config="defaut"
+               camera="bottom"
+               tool="YOLO"/>
+        <Detect item_group="{Image}"
+                item="bin"
+                camera="bottom"/>
+        <Align item_group="{Image}"
+               item="bin"
+               config="throwAway"
+               camera="bottom"
+               tool="YOLO"/>
+        <Claw active="False"/>
+        <increment counter="{counter}"/>
+      </Sequence>
+    </Sequence>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="Align"
+            editable="true">
+      <input_port name="item_group"
+                  type="std::string"/>
+      <input_port name="item"
+                  default="defaut"
+                  type="std::string"/>
+      <input_port name="config"
+                  default="defaut"
+                  type="std::string"/>
+      <input_port name="camera"
+                  default="front"
+                  type="std::string"/>
+      <input_port name="tool"
+                  default="YOLO"
+                  type="std::string"/>
+    </Action>
+    <Action ID="CheckEmptyTable"
+            editable="true"/>
+    <Action ID="Claw"
+            editable="true">
+      <input_port name="active"
+                  default="False"
+                  type="bool">Acionamento da garra</input_port>
+    </Action>
+    <Action ID="ColectData"
+            editable="true">
+      <output_port name="image_grup"
+                   type="std::string"/>
+      <output_port name="side"
+                   type="std::string"/>
+      <output_port name="other_image"
+                   type="std::string"/>
+    </Action>
+    <Action ID="Detect"
+            editable="true">
+      <input_port name="item_group"
+                  type="std::string"/>
+      <input_port name="item"
+                  default="defaut"
+                  type="std::string"/>
+      <input_port name="camera"
+                  default="front"
+                  type="std::string"/>
+    </Action>
+    <Action ID="DropMarkers"
+            editable="true">
+      <input_port name="dropper"
+                  default="1"
+                  type="unsigned int"/>
+    </Action>
+    <Action ID="Emerge"
+            editable="true"/>
+    <Condition ID="FirstItem"
+               editable="true">
+      <input_port name="counter"
+                  type="int"/>
+    </Condition>
+    <Action ID="Go_to"
+            editable="true">
+      <input_port name="x"
+                  default="0"
+                  type="double"/>
+      <input_port name="y"
+                  default="0"
+                  type="double"/>
+      <input_port name="z"
+                  default="0"
+                  type="double"/>
+      <input_port name="frame"
+                  type="std::string"/>
+    </Action>
+    <SubTree ID="LookImage"
+             editable="true">
+      <input_port name="Image"/>
+      <input_port name="counter"/>
+    </SubTree>
+    <SubTree ID="Path"
+             editable="true">
+      <input_port name="task"
+                  type="std::string"/>
+      <input_port name="cam"
+                  type="std::string"/>
+    </SubTree>
+    <SubTree ID="Ping"
+             editable="true">
+      <input_port name="ping"
+                  type="std::string"/>
+      <input_port name="task"
+                  type="std::string"/>
+    </SubTree>
+    <Action ID="Rotate"
+            editable="true">
+      <input_port name="axis"
+                  type="std::string"/>
+      <input_port name="angle"
+                  type="double"/>
+    </Action>
+    <Action ID="SavePose"
+            editable="true">
+      <output_port name="x"
+                   type="double"/>
+      <output_port name="y"
+                   type="double"/>
+      <output_port name="z"
+                   type="double"/>
+    </Action>
+    <Action ID="fire"
+            editable="true">
+      <input_port name="torpedo"
+                  type="unsigned int"/>
+    </Action>
+    <Action ID="increment"
+            editable="true">
+      <inout_port name="counter"
+                  type="int"/>
+    </Action>
+    <SubTree ID="search"
+             editable="true">
+      <input_port name="item_group"
+                  type="std::string"/>
+      <input_port name="task_item"
+                  default="defaut"
+                  type="std::string"/>
+    </SubTree>
+    <SubTree ID="throwAway"
+             editable="true">
+      <input_port name="Image"/>
+      <inout_port name="counter"/>
+    </SubTree>
+  </TreeNodesModel>
+
+</root>

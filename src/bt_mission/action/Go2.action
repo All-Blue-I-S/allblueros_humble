@@ -1,0 +1,16 @@
+# ==========================================
+# 1. GOAL (Enviado da Behavior Tree para o Planejador)
+# ==========================================
+geometry_msgs/PoseStamped target_pose
+
+---
+# ==========================================
+# 2. RESULT (Enviado do Planejador para a Behavior Tree ao terminar)
+# ==========================================
+bool success
+
+---
+# ==========================================
+# 3. FEEDBACK (Enviado continuamente enquanto o AUV se move)
+# ==========================================
+float32 distance_to_goal

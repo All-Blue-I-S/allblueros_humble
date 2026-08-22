@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="3"
+      main_tree_to_execute="Test_goTo">
+  <BehaviorTree ID="Test_goTo">
+    <Sequence>
+      <Delay delay_msec="5000">
+        <AlwaysSuccess/>
+      </Delay>
+      <Sequence name="map">
+        <Sequence name="X">
+
+          <Go_to x="5"
+                 y="-20"
+                 z="1"
+                 frame="map"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="1"
+                 y="-20"
+                 z="1"
+                 frame="map"/>
+        </Sequence>
+        <Delay delay_msec="5000">
+          <AlwaysSuccess/>
+        </Delay>
+        <Sequence name="Y">
+          <Go_to x="1"
+                 y="-20"
+                 z="1"
+                 frame="map"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="1"
+                 y="-25"
+                 z="1"
+                 frame="map"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="1"
+                 y="-20"
+                 z="1"
+                 frame="map"/>
+        </Sequence>
+        <Delay delay_msec="5000">
+          <AlwaysSuccess/>
+        </Delay>
+        <Sequence name="Z">
+          <Go_to x="1"
+                 y="-20"
+                 z="1"
+                 frame="map"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="1"
+                 y="-20"
+                 z="2"
+                 frame="map"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="1"
+                 y="-20"
+                 z="1"
+                 frame="map"/>
+        </Sequence>
+      </Sequence>
+      <Delay delay_msec="10000">
+        <AlwaysSuccess/>
+      </Delay>
+      <Sequence name="base_link">
+        <Sequence name="X">
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+        </Sequence>
+        <Delay delay_msec="5000">
+          <AlwaysSuccess/>
+        </Delay>
+        <Sequence name="Y">
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+        </Sequence>
+        <Delay delay_msec="5000">
+          <AlwaysSuccess/>
+        </Delay>
+        <Sequence name="Z">
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+          <Delay delay_msec="2000">
+            <AlwaysSuccess/>
+          </Delay>
+          <Go_to x="0"
+                 y="0"
+                 z="0"
+                 frame="base_link"/>
+        </Sequence>
+      </Sequence>
+    </Sequence>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="Go_to"
+            editable="true">
+      <input_port name="x"
+                  default="0"
+                  type="double"/>
+      <input_port name="y"
+                  default="0"
+                  type="double"/>
+      <input_port name="z"
+                  default="0"
+                  type="double"/>
+      <input_port name="frame"
+                  type="std::string"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>

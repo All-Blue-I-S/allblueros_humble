@@ -1,0 +1,5 @@
+# Request
+string target_area
+---
+# Response
+bool is_empty

@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<package format="3">
+
+  <name>bt_mission</name>
+  <version>0.0.0</version>
+
+  <description>
+    Behavior Tree mission package for ROS 2 Humble.
+  </description>
+
+  <maintainer email="seu_email@exemplo.com">Seu Nome</maintainer>
+
+  <license>Apache-2.0</license>
+
+
+  <!-- ====================================================== -->
+  <!-- Build system -->
+  <!-- ====================================================== -->
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Geração de .msg / .srv / .action -->
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+
+  <!-- ====================================================== -->
+  <!-- ROS 2 C++ -->
+  <!-- ====================================================== -->
+
+  <depend>rclcpp</depend>
+  <depend>rclcpp_action</depend>
+
+
+  <!-- ====================================================== -->
+  <!-- ROS 2 Python -->
+  <!-- ====================================================== -->
+
+  <depend>rclpy</depend>
+
+
+  <!-- ====================================================== -->
+  <!-- Mensagens -->
+  <!-- ====================================================== -->
+
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+
+
+  <!-- ====================================================== -->
+  <!-- TF2 -->
+  <!-- ====================================================== -->
+
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+
+  <!-- ====================================================== -->
+  <!-- MAVROS -->
+  <!-- ====================================================== -->
+
+  <depend>mavros_msgs</depend>
+
+
+  <!-- ====================================================== -->
+  <!-- BehaviorTree -->
+  <!-- ====================================================== -->
+
+  <depend>behaviortree_cpp_v3</depend>
+
+
+  <!-- ====================================================== -->
+  <!-- Package utilities -->
+  <!-- ====================================================== -->
+
+  <depend>ament_index_cpp</depend>
+
+
+  <!-- ====================================================== -->
+  <!-- Runtime das interfaces geradas -->
+  <!-- ====================================================== -->
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <depend>rosidl_default_generators</depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <!-- ====================================================== -->
+  <!-- Tests -->
+  <!-- ====================================================== -->
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+
+  <export>
+
+    <build_type>ament_cmake</build_type>
+
+  </export>
+
+</package>

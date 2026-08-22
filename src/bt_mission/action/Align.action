@@ -1,0 +1,11 @@
+# Goal (O que a BT pede)
+string item_group
+string item
+string config
+string cam
+---
+# Result (O que o nó devolve quando termina)
+bool success
+---
+# Feedback (Opcional, mas bom para debug)
+float32 current_error
