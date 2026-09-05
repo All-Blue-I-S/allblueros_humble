@@ -18,7 +18,7 @@ class RosbridgeNode(Node):
             "gps": None,
             "local_position": None,
         }
-        self.create_subscrition(
+        self.create_subscription(
             Float32, "/mavros/imu/atm_pressure", self.pressure_cb, 10
         )
         self.create_subscription(

@@ -26,7 +26,7 @@ def generate_launch_description():
 
     thruster_allocator = Node(
         package="auv_control",
-        executable="thruster_allocator",
+        executable="thruster_allocator.py",
         name="thruster_allocator",
         output="screen",
     )
