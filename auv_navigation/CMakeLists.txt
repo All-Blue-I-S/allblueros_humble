@@ -46,6 +46,7 @@ install(
     scripts/dvz_controller.py
     scripts/dvz_mux.py
     scripts/dvz_node.py
+    scripts/barometer_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
