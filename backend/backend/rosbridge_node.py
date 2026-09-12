@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 import json
 from std_msgs.msg import String, Float32
-from sensor_msgs.msg import Imu
+from sensor_msgs.msg import Imu, NavSatFix, PoseStamped
 from geometry_msgs.msg import Twist, Accel
 
 
@@ -125,10 +125,11 @@ class RosbridgeNode(Node):
         except Exception as e:
             self.get_logger().error(f"Erro ao processar comando do joystick: {e}")
 
-        def timer_callback(self):
-            json_data = json.dumps(self.data)
-            msg.data = json_data
-            self.gui_pub.publish(msg)
+    def timer_callback(self):
+        msg = String()
+        json_data = json.dumps(self.data)
+        msg.data = json_data
+        self.gui_pub.publish(msg)
 
 
 def main(args=None):
