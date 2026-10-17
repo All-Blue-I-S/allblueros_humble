@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 import json
 from std_msgs.msg import String, Float32
-from sensor_msgs.msg import Imu, NavSatFix, PoseStamped
+from sensor_msgs.msg import Imu, NavSatFix
 from geometry_msgs.msg import Twist, Accel
 
 
@@ -29,10 +29,6 @@ class RosbridgeNode(Node):
         self.create_subscription(
             NavSatFix, "/mavros/global_position/global", self.gps_cb, 10
         )
-        self.create_subscription(
-            PoseStamped, "/mavros/local_position/pose", self.local_position_cb, 10
-        )
-
         self.gui_pub = self.create_publisher(String, "/rov/gui_data", 10)
 
         self.create_subscription(String, "/rov/joystick_cmd", self.joystick_cmd_cb, 10)
@@ -80,21 +76,6 @@ class RosbridgeNode(Node):
             "longitude": msg.longitude,
             "altitude": msg.altitude,
             "status": msg.status.status,
-        }
-
-    def local_position_cb(self, msg):
-        self.data["local_position"] = {
-            "position": {
-                "x": msg.pose.position.x,
-                "y": msg.pose.position.y,
-                "z": msg.pose.position.z,
-            },
-            "orientation": {
-                "x": msg.pose.orientation.x,
-                "y": msg.pose.orientation.y,
-                "z": msg.pose.orientation.z,
-                "w": msg.pose.orientation.w,
-            },
         }
 
     # --- Callback para processar comandos da GUI ---

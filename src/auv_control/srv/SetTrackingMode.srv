@@ -1,5 +1,0 @@
-string mode
-float32 orbit_velocity
----
-bool success
-string message
