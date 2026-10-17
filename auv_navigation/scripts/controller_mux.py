@@ -8,9 +8,8 @@ from std_msgs.msg import String, Bool
 
 
 class CommandMux(Node):
-
     def __init__(self):
-        super().__init__('cmd_accel_mux')
+        super().__init__("cmd_accel_mux")
 
         # ============================================================
         # Estado
@@ -30,11 +29,7 @@ class CommandMux(Node):
         # ============================================================
 
         # Tópico REAL de comando do AUV
-        self.cmd_pub = self.create_publisher(
-            Accel,
-            '/cmd_accel',
-            10
-        )
+        self.cmd_pub = self.create_publisher(Accel, "/auv/desired/accel", 10)
 
         # ============================================================
         # Subscribers
@@ -42,10 +37,7 @@ class CommandMux(Node):
 
         # Behavior Tree seleciona quem possui autoridade
         self.mode_sub = self.create_subscription(
-            String,
-            '/mux/cmd_vel',
-            self.select_callback,
-            10
+            String, "/mux/cmd_vel", self.select_callback, 10
         )
 
         # Controlador GO2
@@ -66,16 +58,10 @@ class CommandMux(Node):
 
         # Emergency
         self.sub_emergency = self.create_subscription(
-            Bool,
-            '/emergency',
-            self.emergency_callback,
-            10
+            Bool, "/emergency", self.emergency_callback, 10
         )
 
-        self.get_logger().info(
-            'Mux de Aceleração iniciado. '
-            'Modo inicial: IDLE'
-        )
+        self.get_logger().info("Mux de Aceleração iniciado. Modo inicial: IDLE")
 
     # ================================================================
     # Emergency
@@ -146,19 +132,12 @@ class CommandMux(Node):
                 # ----------------------------------------------------
 
                 if self.active_controller == "IDLE":
-
                     stop_msg = Accel()
 
-                    self.cmd_pub.publish(
-                        stop_msg
-                    )
+                    self.cmd_pub.publish(stop_msg)
 
         else:
-
-            self.get_logger().warn(
-                f'Modo de Mux desconhecido: '
-                f'{requested_mode}'
-            )
+            self.get_logger().warn(f"Modo de Mux desconhecido: {requested_mode}")
 
     # ================================================================
     # GO2
@@ -198,5 +177,5 @@ def main(args=None):
         rclpy.shutdown()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

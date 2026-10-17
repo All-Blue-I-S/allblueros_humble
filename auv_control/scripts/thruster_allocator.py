@@ -7,6 +7,7 @@ import numpy as np
 from mavros_msgs.msg import OverrideRCIn
 from geometry_msgs.msg import Accel
 
+
 class ThrusterAllocator(Node):
     """
     Nó ROS responsável por realizar a **alocação de empuxo** de um AUV com 7 motores.
@@ -25,70 +26,66 @@ class ThrusterAllocator(Node):
     """
 
     def __init__(self):
-        super().__init__('thruster_allocator')
+        super().__init__("thruster_allocator")
 
         # ============================================================
         # Parâmetros ROS
         # ============================================================
 
-        self.declare_parameter('thruster_pub_topic', '/mavros/rc/override')
+        self.declare_parameter("thruster_pub_topic", "/mavros/rc/override")
 
-        self.declare_parameter('accel_sub_topic', '/cmd_accel')
+        self.declare_parameter("accel_sub_topic", "/auv/desired/accel")
 
-        self.declare_parameter('control_rate', 30.0)
+        self.declare_parameter("control_rate", 30.0)
 
-        self.declare_parameter('thrust_constant', 0.4256)
+        self.declare_parameter("thrust_constant", 0.4256)
 
-        self.declare_parameter('pwm_gain', 8.1 / 1000.0)
+        self.declare_parameter("pwm_gain", 8.1 / 1000.0)
 
-        self.declare_parameter('pwm_offset', -8.1 * 1.5)
+        self.declare_parameter("pwm_offset", -8.1 * 1.5)
 
-        self.declare_parameter('max_force', 6.980904)
+        self.declare_parameter("max_force", 6.980904)
 
-        self.declare_parameter('pwm_min', 1100)
+        self.declare_parameter("pwm_min", 1100)
 
-        self.declare_parameter('pwm_max', 1900)
+        self.declare_parameter("pwm_max", 1900)
 
-        self.declare_parameter('pwm_neutral', 1500)
+        self.declare_parameter("pwm_neutral", 1500)
 
-        self.declare_parameter('motor_directions', [1, 1, 1, 1, 1, 1, 1])
+        self.declare_parameter("motor_directions", [1, 1, 1, 1, 1, 1, 1])
 
         # ============================================================
         # Recuperação dos parâmetros
         # ============================================================
 
-        self.thruster_pub_topic = self.get_parameter('thruster_pub_topic').value
+        self.thruster_pub_topic = self.get_parameter("thruster_pub_topic").value
 
-        self.accel_sub_topic = self.get_parameter('accel_sub_topic').value
+        self.accel_sub_topic = self.get_parameter("accel_sub_topic").value
 
-        self.control_rate = self.get_parameter('control_rate').value
+        self.control_rate = self.get_parameter("control_rate").value
 
-        self.k = self.get_parameter('thrust_constant').value
+        self.k = self.get_parameter("thrust_constant").value
 
-        self.a = self.get_parameter('pwm_gain').value
+        self.a = self.get_parameter("pwm_gain").value
 
-        self.b = self.get_parameter('pwm_offset').value
+        self.b = self.get_parameter("pwm_offset").value
 
-        self.max_force = self.get_parameter('max_force').value
+        self.max_force = self.get_parameter("max_force").value
 
-        self.pwm_min = self.get_parameter('pwm_min').value
+        self.pwm_min = self.get_parameter("pwm_min").value
 
-        self.pwm_max = self.get_parameter('pwm_max').value
+        self.pwm_max = self.get_parameter("pwm_max").value
 
-        self.pwm_neutral = self.get_parameter('pwm_neutral').value
+        self.pwm_neutral = self.get_parameter("pwm_neutral").value
 
-        self.motor_directions = np.array(
-            self.get_parameter('motor_directions').value
-        )
+        self.motor_directions = np.array(self.get_parameter("motor_directions").value)
 
         # ============================================================
         # Publishers
         # ============================================================
 
         self.thruster_pub = self.create_publisher(
-            OverrideRCIn,
-            self.thruster_pub_topic,
-            10
+            OverrideRCIn, self.thruster_pub_topic, 10
         )
 
         # ============================================================
@@ -96,10 +93,7 @@ class ThrusterAllocator(Node):
         # ============================================================
 
         self.accel_sub = self.create_subscription(
-            Accel,
-            self.accel_sub_topic,
-            self.accel_callback,
-            10
+            Accel, self.accel_sub_topic, self.accel_callback, 10
         )
 
         # ============================================================
@@ -119,9 +113,7 @@ class ThrusterAllocator(Node):
 
         self._build_allocation_matrix()
 
-        self.get_logger().info(
-            'Nó inicializado com sucesso para 7 motores.'
-        )
+        self.get_logger().info("Nó inicializado com sucesso para 7 motores.")
 
     # ================================================================
     # Callbacks
@@ -137,26 +129,26 @@ class ThrusterAllocator(Node):
         # Posição dos motores
         pos_T = np.array(
             [
-                [-0.301500, 0.000000,-0.029229],    # 1
-                [ 0.301500, 0.166500,-0.029229],    # 2
-                [ 0.301500,-0.166500,-0.029229],    # 3
-                [-0.265214, 0.166286,-0.113000],    # 4
-                [-0.265214,-0.166286,-0.113000],    # 5
-                [ 0.192214, 0.161286,-0.113000],    # 6
-                [ 0.192214,-0.161286,-0.113000],    # 7
+                [-0.301500, 0.000000, -0.029229],  # 1
+                [0.301500, 0.166500, -0.029229],  # 2
+                [0.301500, -0.166500, -0.029229],  # 3
+                [-0.265214, 0.166286, -0.113000],  # 4
+                [-0.265214, -0.166286, -0.113000],  # 5
+                [0.192214, 0.161286, -0.113000],  # 6
+                [0.192214, -0.161286, -0.113000],  # 7
             ]
         )
 
         # Direção dos motores
         dir_D = np.array(
             [
-                [ 0, 0,-1],    # 1
-                [ 0, 0,-1],    # 2
-                [ 0, 0,-1],    # 3
-                [-1, 1, 0],    # 4
-                [-1,-1, 0],    # 5
-                [ 1, 1, 0],    # 6
-                [ 1,-1, 0],    # 7
+                [0, 0, -1],  # 1
+                [0, 0, -1],  # 2
+                [0, 0, -1],  # 3
+                [-1, 1, 0],  # 4
+                [-1, -1, 0],  # 5
+                [1, 1, 0],  # 6
+                [1, -1, 0],  # 7
             ],
             dtype=float,
         )
@@ -203,7 +195,6 @@ class ThrusterAllocator(Node):
             m = m * (self.max_force / max_m)
         pwmT = self.force_to_pwm(m)
 
-        
         motors_order = [0, 1, 2, 3, 4, 5, 6]
         pwm = []
         for i in motors_order:
@@ -237,8 +228,6 @@ class ThrusterAllocator(Node):
         return pwm_clipped
 
 
-
-
 if __name__ == "__main__":
     rclpy.init(args=None)
 
@@ -254,4 +243,3 @@ if __name__ == "__main__":
     finally:
         node.destroy_node()
         rclpy.shutdown()
-
