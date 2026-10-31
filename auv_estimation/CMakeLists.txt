@@ -63,6 +63,7 @@ install(
 install(
   FILES
   src/ffc_rs_26_det_only.pt
+  src/yolo26n.pt
   DESTINATION lib/${PROJECT_NAME}
 )
 # ============================================================
