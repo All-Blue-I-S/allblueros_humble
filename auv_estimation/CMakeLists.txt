@@ -11,32 +11,22 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-find_package(rclcpp REQUIRED)
-find_package(rclpy REQUIRED)
+# Dependencies for custom interfaces
+find_package(rosidl_default_generators REQUIRED)
+find_package(action_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(cv_bridge REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/Corner.msg"
-  "action/Config.action"
-  DEPENDENCIES action_msgs sensor_msgs
-)
-
-find_package(geometry_msgs REQUIRED)
-find_package(nav_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(mavros_msgs REQUIRED)
-
-# ROS interfaces
-find_package(rosidl_default_generators REQUIRED)
 
 # ============================================================
 # Custom interfaces
 # ============================================================
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "srv/SetTrackingMode.srv"
+  "msg/Corner.msg"
+  "action/Config.action"
+  DEPENDENCIES
+    action_msgs
+    sensor_msgs
 )
 
 # ============================================================
@@ -66,12 +56,15 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 install(
   PROGRAMS
-    scripts/thruster_allocator.py
-    scripts/visual_servoing_controller.py
-    scripts/pd_trajectory_controller.py
+    src/identifica_cor.py
+    src/yolo_detector.py
   DESTINATION lib/${PROJECT_NAME}
 )
-
+install(
+  FILES
+  src/ffc_rs_26_det_only.pt
+  DESTINATION lib/${PROJECT_NAME}
+)
 # ============================================================
 # Tests
 # ============================================================
