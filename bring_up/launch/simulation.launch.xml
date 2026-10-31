@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Controle -->
+  <include
+    file="$(find-pkg-share backend)/launch/rov.launch.py"/>
+
+    <node
+    pkg="auv_estimation"
+    exec="yolo_detector.py"
+    name="visual_servoing_controller"
+    output="screen">
+
+</node>
+
+
+</launch>
