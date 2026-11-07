@@ -4,14 +4,18 @@
   <!-- Controle -->
   <include
     file="$(find-pkg-share backend)/launch/rov.launch.py"/>
-
-    <node
+  <node
     pkg="auv_estimation"
     exec="yolo_detector.py"
     name="visual_servoing_controller"
     output="screen">
+  </node>
 
-</node>
+  <node pkg="ros_tcp_endpoint" exec="default_server_endpoint" name="unity_node"></node>
 
+  <include file="$(find-pkg-share auv_sim)/launch/sim.launch.py">
+  <arg name="world" value="oceanfloor_shipwreck"/>
+  <arg name="vehicle" value="peixonauta"/>
+  </include>
 
 </launch>
