@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import rclpy
+from numpy import interp as it
 from rclpy.node import Node
 import json
 from std_msgs.msg import String, Float32
@@ -33,7 +34,7 @@ class RosbridgeNode(Node):
 
         self.create_subscription(String, "/rov/joystick_cmd", self.joystick_cmd_cb, 10)
 
-        self.cmd_vel_pub = self.create_publisher(Twist, "/auv/desired/vel", 10)
+        self.cmd_vel_pub = self.create_publisher(Twist, "/cmd_vel", 10)
         self.cmd_accel_pub = self.create_publisher(Accel, "/auv/desired/accel", 10)
 
         timer_period = 0.1
@@ -81,27 +82,50 @@ class RosbridgeNode(Node):
     # --- Callback para processar comandos da GUI ---
 
     def joystick_cmd_cb(self, msg):
-        """Analisa o comando JSON da GUI e publica uma mensagem Accel."""
+        """Analisa o comando JSON da GUI e publica uma mensagem Twist (ou Accel)."""
         try:
             cmd_data = json.loads(msg.data)
             print("cmd_data", cmd_data)
 
+            # Função auxiliar para mapear de [-5, 5] para [-1.0, 1.0]
+            def map_axis(key):
+                raw_val = float(cmd_data.get(key, 0.0))
+                return float(it(raw_val, [-5.0, 5.0], [-1.0, 1.0]))
+
+            # Valores normalizados no intervalo [-1.0, 1.0]
+            lx = map_axis("linear_x")
+            ly = map_axis("linear_y")
+            lz = map_axis("linear_z")
+            ax = map_axis("angular_x")
+            ay = map_axis("angular_y")
+            az = map_axis("angular_z")
+
+            # --- Accel Msg (se for utilizar) ---
             accel_msg = Accel()
-            accel_msg.linear.x = float(cmd_data.get("linear_x", 0.0)) * 19.745
-            accel_msg.linear.y = float(cmd_data.get("linear_y", 0.0)) * 19.745
-            accel_msg.linear.z = float(cmd_data.get("linear_z", 0.0)) * 27.924
-            accel_msg.angular.x = (float(cmd_data.get("angular_x", 0.0)) + 0.5) * 5.585
-            accel_msg.angular.y = float(cmd_data.get("angular_y", 0.0)) * 13.962
-            accel_msg.angular.z = float(cmd_data.get("angular_z", 0.0)) * 5.924
+            accel_msg.linear.x = lx * 19.745
+            accel_msg.linear.y = ly * 19.745
+            accel_msg.linear.z = lz * 27.924
+            accel_msg.angular.x = (ax + 0.5) * 5.585
+            accel_msg.angular.y = ay * 13.962
+            accel_msg.angular.z = az * 5.924
 
-            self.cmd_accel_pub.publish(accel_msg)
+            # self.cmd_accel_pub.publish(accel_msg)
+            # self.get_logger().info(
+            #     f"Comando de aceleração publicado: linear_x={accel_msg.linear.x}, angular_z={accel_msg.angular.z}"
+            # )
+
+            # --- Twist Msg ---
+            vel_msg = Twist()
+            vel_msg.linear.x = lx
+            vel_msg.linear.y = ly
+            vel_msg.linear.z = lz
+            vel_msg.angular.x = ax
+            vel_msg.angular.y = ay
+            vel_msg.angular.z = az
+
+            self.cmd_vel_pub.publish(vel_msg)
             self.get_logger().info(
-                f"Comando de aceleração publicado: linear_x={accel_msg.linear.x}, angular_z={accel_msg.angular.z}"
-            )
-
-        except json.JSONDecodeError:
-            self.get_logger().warn(
-                f"JSON malformado recebido em /rov/joystick_cmd: {msg.data}"
+                f"Comando de velocidade publicado: linear_x={vel_msg.linear.x}, angular_z={vel_msg.angular.z}"
             )
         except Exception as e:
             self.get_logger().error(f"Erro ao processar comando do joystick: {e}")
